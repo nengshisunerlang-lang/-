@@ -1,0 +1,9 @@
+{
+  "name": "tsugite-app",
+  "private": true,
+  "version": "1.0.0",
+  "description": "継手 - 親子間事業承継のための相互開示ツール",
+  "dependencies": {
+    "@netlify/blobs": "^11.0.3"
+  }
+}
