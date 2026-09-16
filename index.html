@@ -1,0 +1,1388 @@
+
+<!DOCTYPE html>
+<html lang="ja"><head><meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;500;700;800&family=Zen+Kaku+Gothic+New:wght@400;500;700;900&display=swap" rel="stylesheet">
+<title>継手</title>
+<style>
+:root{
+  --sumi:#1B1D23; --ai:#25406B; --ai-soft:#5C749B; --tan:#DDE3EA;
+  --paper:#EDEFEA; --paper-2:#E3E6DF; --paper-3:#F4F5F1; --shu:#C0392B;
+  --line:rgba(27,29,35,.14); --line-2:rgba(27,29,35,.26); --line-shu:rgba(192,57,43,.35);
+  --muted:#3C4049; --muted-2:#4A4E57; --muted-3:#54585F;
+  --band-bg:#25406B; --band-fg:#EDEFEA;
+  --band-fg-soft:rgba(237,239,234,.82); --band-fg-mute:rgba(237,239,234,.70);
+  --band-line:rgba(237,239,234,.28);
+  --ok:#2E6B4F;
+  --disp:"Shippori Mincho B1","Hiragino Mincho ProN","Yu Mincho",serif;
+  --body:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --sumi:#E6E7E1; --ai:#9BB2D6; --ai-soft:#8296B5; --tan:#2B313A;
+    --paper:#141619; --paper-2:#1C1F24; --paper-3:#1A1D22; --shu:#DE6B57;
+    --line:rgba(230,231,225,.16); --line-2:rgba(230,231,225,.30);
+    --line-shu:rgba(222,107,87,.40);
+    --muted:#BFC2C7; --muted-2:#AAAEB5; --muted-3:#A2A6AD;
+    --band-bg:#1C2C46; --ok:#77B896;
+  }
+}
+:root[data-theme="dark"]{
+  --sumi:#E6E7E1; --ai:#9BB2D6; --ai-soft:#8296B5; --tan:#2B313A;
+  --paper:#141619; --paper-2:#1C1F24; --paper-3:#1A1D22; --shu:#DE6B57;
+  --line:rgba(230,231,225,.16); --line-2:rgba(230,231,225,.30);
+  --line-shu:rgba(222,107,87,.40);
+  --muted:#BFC2C7; --muted-2:#AAAEB5; --muted-3:#A2A6AD;
+  --band-bg:#1C2C46; --ok:#77B896;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--sumi);font-family:var(--body);
+  font-weight:400;line-height:1.9;letter-spacing:.02em;overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+:focus-visible{outline:2px solid var(--shu);outline-offset:3px}
+.hidden{display:none!important}
+.wrap{max-width:760px;margin:0 auto;padding:0 20px}
+/* app shell */
+.appbar{position:sticky;top:0;z-index:20;background:var(--paper);border-bottom:1px solid var(--line)}
+.appbar-in{max-width:760px;margin:0 auto;padding:11px 20px 0;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{font-family:var(--disp);font-weight:700;font-size:21px;letter-spacing:.14em;color:var(--ai);line-height:1.2}
+.brand small{display:block;font-family:var(--body);font-size:8.5px;letter-spacing:.34em;color:var(--ai-soft);font-weight:500;margin-top:2px}
+.meta{display:flex;gap:16px;flex-wrap:wrap;margin-left:auto}
+.meta-i{display:flex;flex-direction:column;line-height:1.35}
+.meta-k{font-size:9px;letter-spacing:.2em;color:var(--ai-soft);font-weight:500}
+.meta-v{font-size:13px;font-weight:700;color:var(--ai);white-space:nowrap}
+.tabs{max-width:760px;margin:0 auto;padding:0 20px;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  appearance:none;border:0;background:none;cursor:pointer;font-family:var(--body);
+  font-size:13px;font-weight:500;color:var(--muted-3);padding:11px 13px 9px;
+  border-bottom:2px solid transparent;white-space:nowrap;transition:color .18s,border-color .18s;
+  touch-action:manipulation;
+}
+.tab:hover{color:var(--ai)}
+.tab[aria-selected="true"]{color:var(--shu);border-bottom-color:var(--shu)}
+main{padding:22px 0 70px}
+.panel-t{font-family:var(--disp);font-size:19px;font-weight:500;line-height:1.5}
+.panel-p{font-size:12.5px;font-weight:300;color:var(--muted-3);line-height:1.75;margin-top:4px}
+/* controls */
+.btn{
+  font-family:var(--body);font-size:13px;font-weight:500;letter-spacing:.04em;padding:11px 20px;
+  border:1px solid var(--ai);background:none;color:var(--ai);cursor:pointer;
+  transition:background .18s,color .18s,border-color .18s;touch-action:manipulation;
+  min-height:44px;
+}
+.btn:hover{background:var(--ai);color:var(--paper)}
+.btn.primary{background:var(--ai);color:var(--paper)}
+.btn.primary:hover{background:var(--band-bg)}
+.btn:disabled{opacity:.38;cursor:default}
+.btn:disabled:hover{background:none;color:var(--ai)}
+.btn.primary:disabled:hover{background:var(--ai);color:var(--paper)}
+.btn.ghost{border-color:var(--line-2);color:var(--muted-2)}
+.btn.ghost:hover{background:none;border-color:var(--ai-soft);color:var(--ai)}
+.btn.mini{padding:6px 11px;font-size:11.5px;border-color:var(--line-2);color:var(--muted-2)}
+.btn.mini:hover{background:none;border-color:var(--ai-soft);color:var(--ai)}
+.field{
+  width:100%;font-family:var(--body);font-size:16px;line-height:1.8;color:var(--sumi);
+  background:var(--paper);border:1px solid var(--line-2);padding:10px 12px;font-weight:300;
+}
+.field:focus{border-color:var(--ai-soft);outline:none;box-shadow:0 0 0 2px var(--tan)}
+.field:disabled{background:var(--paper-3);color:var(--muted-3);cursor:not-allowed}
+textarea.field{resize:vertical;min-height:80px}
+/* gate */
+.gatewrap{max-width:760px;margin:0 auto;padding:56px 20px 70px}
+.gate-mark{font-family:var(--disp);font-weight:700;font-size:clamp(52px,17vw,92px);line-height:1;letter-spacing:.08em;color:var(--ai)}
+.gate-rom{font-size:10px;letter-spacing:.42em;color:var(--ai-soft);font-weight:500;margin:6px 0 26px}
+.gate-lede{font-family:var(--disp);font-size:clamp(19px,4.6vw,26px);font-weight:500;line-height:1.62;margin-bottom:16px;text-wrap:balance}
+.gate-lede em{font-style:normal;color:var(--shu)}
+.gate-sub{font-size:14px;font-weight:300;color:var(--muted);max-width:34em}
+.gate-card{background:var(--paper-2);border:1px solid var(--line);padding:19px 17px;margin-top:32px}
+.gate-card h4{font-size:13.5px;font-weight:700;margin-bottom:4px}
+.gate-card p{font-size:12.5px;font-weight:300;color:var(--muted-2);margin-bottom:14px}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.rolebtn{
+  border:1px solid var(--line-2);background:var(--paper);cursor:pointer;padding:10px 8px;
+  font-family:var(--body);font-size:12.5px;font-weight:500;color:var(--muted-2);
+  transition:border-color .18s,color .18s,background .18s;touch-action:manipulation;
+  min-height:44px;
+}
+.rolebtn[aria-pressed="true"]{border-color:var(--shu);color:var(--shu);background:var(--paper-3)}
+/* peer code exchange */
+.exwrap{background:var(--paper-2);border:1px solid var(--line);padding:19px 17px;margin:18px 0}
+.exstep{padding-bottom:18px;margin-bottom:18px;border-bottom:1px solid var(--line)}
+.exstep:last-child{padding-bottom:0;margin-bottom:0;border-bottom:none}
+.exstep h4{font-size:13.5px;font-weight:700;margin-bottom:6px;color:var(--ai)}
+.exnote{font-size:12px;font-weight:300;color:var(--muted-2);line-height:1.7;margin-bottom:10px}
+/* notices */
+.note{
+  margin-top:14px;border:1px solid var(--line);background:var(--paper-2);padding:11px 13px;
+  font-size:12.5px;font-weight:300;color:var(--muted-2);line-height:1.7;
+}
+.note.warn{border-color:var(--line-shu);color:var(--muted-2)}
+.note.warn b{color:var(--shu);font-weight:700}
+.note b{font-weight:700;color:var(--ai)}
+.msg{margin-top:12px;font-size:12.5px;line-height:1.7;color:var(--shu);font-weight:500}
+.msg.ok{color:var(--ok)}
+.msg:empty{display:none}
+/* cards */
+.acard{background:var(--paper-2);border:1px solid var(--line);margin-top:12px;padding:16px 15px}
+.acard.is-hard{border-left:2px solid var(--shu)}
+.qhead{display:flex;align-items:baseline;gap:11px;margin-bottom:12px}
+.qnum{font-size:11px;font-weight:700;color:var(--ai-soft);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+.qtext{font-family:var(--disp);font-size:15.5px;font-weight:500;line-height:1.65;flex:1}
+.qtag{font-size:10px;letter-spacing:.1em;color:var(--shu);border:1px solid var(--line-shu);padding:1px 6px;font-weight:500;white-space:nowrap;align-self:center}
+.mylabel{font-size:10px;letter-spacing:.18em;color:var(--ai-soft);font-weight:500;margin-bottom:6px}
+.stances{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.st{
+  border:1px solid var(--line-2);background:var(--paper);cursor:pointer;padding:6px 11px;
+  font-family:var(--body);font-size:11.5px;font-weight:500;color:var(--muted-2);
+  transition:border-color .18s,color .18s,background .18s;touch-action:manipulation;
+  min-height:40px;
+}
+.st:hover{border-color:var(--ai-soft)}
+.st[aria-pressed="true"]{border-color:var(--shu);color:var(--shu);background:var(--paper-3)}
+.stnote{font-size:11.5px;font-weight:300;color:var(--muted-3);margin-top:8px;line-height:1.7}
+.recv{margin-top:12px}
+.recv-k{font-size:10px;letter-spacing:.18em;color:var(--ai-soft);font-weight:500;display:block;margin-bottom:6px}
+.recv-b{display:flex;flex-wrap:wrap;gap:6px}
+.recv-note{font-size:11.5px;font-weight:300;color:var(--muted-3);margin-top:7px;line-height:1.7}
+.xrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;align-items:center}
+/* board */
+.brow{background:var(--paper-2);border:1px solid var(--line);margin-top:12px;padding:16px 15px}
+.brow.is-hard{border-left:2px solid var(--shu)}
+.joint{flex:0 0 auto;line-height:0;color:var(--ai-soft)}
+.joint svg{width:108px;height:50px;display:block}
+.joint path{fill:none;stroke:currentColor;stroke-width:2.4;stroke-linejoin:round}
+.jp{transition:transform .55s cubic-bezier(.2,.8,.25,1),opacity .4s ease}
+.jp-l{transform:translateX(-15px)}
+.jp-r{transform:translateX(15px)}
+.joint .peg{fill:none;stroke:var(--shu);stroke-width:2.4;opacity:0;transition:opacity .35s ease .2s}
+.joined .joint{color:var(--shu)}
+.joined .jp{transform:translateX(0)}
+.joined .peg{opacity:1}
+.jointwrap{display:flex;align-items:center;gap:14px;margin-top:14px;border:1px solid var(--line);background:var(--paper-3);padding:12px 14px}
+.jstate{font-size:12.5px;font-weight:400;color:var(--muted-2);line-height:1.7}
+.jstate b{font-weight:700;color:var(--shu)}
+.lockbar{
+  display:flex;gap:11px;align-items:flex-start;margin-top:14px;border:1px solid var(--line-shu);
+  background:var(--paper-3);padding:11px 13px;font-size:12.5px;font-weight:400;color:var(--muted-2);line-height:1.75;
+}
+.lockbar .sen{font-family:var(--disp);font-size:15px;color:var(--shu);line-height:1.3;flex:0 0 auto}
+.tally{display:grid;grid-template-columns:1fr 1fr;margin-top:12px}
+.half{background:var(--paper-3);border:1px solid var(--line);padding:13px 12px;min-height:104px;display:flex;flex-direction:column}
+.half.left{border-right:none}
+.half-role{font-size:10.5px;letter-spacing:.16em;font-weight:700;color:var(--ai);margin-bottom:9px}
+.half-role em{font-style:normal;color:var(--ai-soft);font-weight:500;letter-spacing:.06em}
+.half-ans{flex:1;font-size:13.5px;line-height:1.75;font-weight:300;display:flex;align-items:center}
+.state{font-size:12px;font-weight:400;color:var(--muted-3);line-height:1.7}
+.state.wait{color:var(--ai-soft)}
+.state.later{color:var(--shu)}
+.talkrow{display:flex;align-items:center;gap:9px;margin-top:11px;flex-wrap:wrap}
+.talkrow label{display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;font-weight:500;color:var(--muted-2)}
+.talkrow input{position:absolute;opacity:0;width:0;height:0}
+.box{width:14px;height:14px;flex:0 0 14px;border:1.5px solid var(--ai-soft);position:relative;transition:background .2s,border-color .2s}
+.talkrow input:checked ~ .box{background:var(--shu);border-color:var(--shu)}
+.box::after{content:"";position:absolute;left:3.6px;top:0;width:4px;height:8.5px;border:solid var(--paper);border-width:0 1.8px 1.8px 0;transform:rotate(42deg) scale(0);transition:transform .2s}
+.talkrow input:checked ~ .box::after{transform:rotate(42deg) scale(1)}
+.talkrow input:focus-visible ~ .box{outline:2px solid var(--shu);outline-offset:2px}
+/* voice */
+.voicebar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.micstate{font-size:11.5px;font-weight:500;color:var(--shu)}
+.btn.mini[data-role="mic"][aria-pressed="true"]{border-color:var(--shu);color:var(--shu)}
+.convbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:16px}
+.convrun{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.convpos{font-size:12px;font-weight:700;color:var(--ai);letter-spacing:.06em;font-variant-numeric:tabular-nums}
+#answers.convmode .acard{display:none}
+#answers.convmode .acard.current{display:block;background:var(--paper-3)}
+/* agenda / about */
+.empty{font-size:13px;font-weight:300;color:var(--muted-3);margin-top:14px}
+.about section{padding:30px 0 6px}
+.about .eyebrow{font-size:11px;font-weight:500;letter-spacing:.22em;color:var(--ai-soft);display:flex;align-items:center;gap:10px}
+.about .eyebrow::after{content:"";flex:1;height:1px;background:var(--line)}
+.sec-t{font-family:var(--disp);font-weight:500;font-size:clamp(19px,4.4vw,25px);line-height:1.55;margin:14px 0 16px;text-wrap:balance}
+.sec-p{font-size:14px;font-weight:300;color:var(--muted);max-width:34em}
+.rule{height:1px;background:var(--line);border:0;margin-top:24px}
+.prob{border-top:1px solid var(--line);padding:16px 0 14px}
+.prob-q{font-family:var(--disp);font-size:15.5px;font-weight:500;color:var(--ai);line-height:1.6;margin-bottom:6px}
+.prob-q::before{content:"「";opacity:.45}
+.prob-q::after{content:"」";opacity:.45}
+.prob-a{font-size:13px;font-weight:300;color:var(--muted-2)}
+.step{display:grid;grid-template-columns:32px 1fr;gap:13px;padding:18px 0;border-top:1px solid var(--line)}
+.step-n{font-family:var(--disp);font-size:18px;color:var(--shu);line-height:1.4;font-weight:500}
+.step-h{font-size:14.5px;font-weight:700;margin-bottom:4px}
+.step-b{font-size:13px;font-weight:300;color:var(--muted-2)}
+.opt{border-top:1px solid var(--line);padding:15px 0}
+.opt-h{font-size:14px;font-weight:700;margin-bottom:4px;display:flex;align-items:center;gap:9px}
+.dot{width:8px;height:8px;flex:0 0 8px;border-radius:50%}
+.d1{background:var(--ai)}
+.d2{background:var(--shu)}
+.d3{background:var(--ai-soft);opacity:.5}
+.d4{background:none;border:1.5px solid var(--ai-soft)}
+.opt-b{font-size:13px;font-weight:300;color:var(--muted-2);padding-left:17px}
+.depth{margin-top:20px;display:flex;align-items:center;gap:12px;font-size:11px;letter-spacing:.12em;color:var(--ai-soft);font-weight:500}
+.depth-bar{flex:1;height:3px;background:linear-gradient(90deg,var(--tan),var(--shu))}
+.band{background:var(--band-bg);color:var(--band-fg);padding:34px 20px;margin:30px -20px 0}
+.band .eyebrow{color:var(--band-fg-mute)}
+.band .eyebrow::after{background:var(--band-line)}
+.band .sec-t{color:var(--band-fg)}
+.finding{border-left:2px solid var(--shu);padding:4px 0 4px 15px;margin:20px 0 0;font-family:var(--disp);font-size:15px;line-height:1.7}
+.finding small{display:block;font-family:var(--body);font-size:12px;font-weight:300;color:var(--band-fg-mute);margin-top:8px;line-height:1.75}
+.foot{padding:28px 0 10px;font-size:11.5px;color:var(--ai-soft);font-weight:300;line-height:1.9}
+.foot b{font-family:var(--disp);font-weight:700;color:var(--ai);font-size:14px;letter-spacing:.1em}
+.about-cta{margin-top:32px;padding-top:28px;border-top:1px solid var(--line);text-align:center}
+.about-cta .sec-p{max-width:none;margin:0 auto 18px}
+@media (min-width:700px){
+  .acard,.brow{padding:20px 20px 17px}
+  .half{padding:16px 15px}
+  main{padding:28px 0 90px}
+}
+/* 会話モード オーバーレイ */
+#convOverlay{
+  position:fixed;inset:0;z-index:100;
+  background:radial-gradient(ellipse at 50% 20%, #16233f 0%, #0b1220 55%, #060a13 100%);
+  color:#EAF1FF;display:flex;flex-direction:column;align-items:center;justify-content:space-between;
+  padding:20px 20px calc(20px + env(safe-area-inset-bottom));overflow-y:auto;
+}
+#convOverlay.hidden{display:none!important}
+.convov-exit{
+  align-self:flex-end;background:none;border:1px solid rgba(234,241,255,.28);color:rgba(234,241,255,.75);
+  font-family:var(--body);font-size:11.5px;letter-spacing:.08em;padding:8px 14px;cursor:pointer;
+  border-radius:999px;touch-action:manipulation;min-height:36px;
+}
+.convov-exit:hover{border-color:rgba(234,241,255,.55);color:#EAF1FF}
+.convov-mid{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;max-width:520px;margin:auto;padding:24px 8px}
+.convov-orb{position:relative;width:132px;height:132px;margin-bottom:22px;display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.convov-ring{position:absolute;inset:0;border-radius:50%;border:1px solid rgba(107,168,255,.35);box-shadow:0 0 40px 6px rgba(64,132,255,.22)}
+.convov-core{
+  width:64px;height:64px;border-radius:50%;
+  background:radial-gradient(circle at 35% 32%, #bfe0ff 0%, #6badff 34%, #2f6fe0 68%, #163b82 100%);
+  box-shadow:0 0 30px 4px rgba(90,150,255,.55), inset 0 0 14px rgba(255,255,255,.35);
+  transition:transform .5s ease;
+}
+#convOverlay.is-speaking .convov-core{animation:convPulseSpeak 1.1s ease-in-out infinite}
+#convOverlay.is-speaking .convov-ring{animation:convRingSpeak 1.1s ease-in-out infinite}
+#convOverlay.is-listening .convov-core{animation:convPulseListen 1.6s ease-in-out infinite}
+#convOverlay.is-listening .convov-ring{animation:convRingListen 1.6s ease-in-out infinite}
+#convOverlay.is-waiting .convov-core{opacity:.55}
+#convOverlay.is-recorded .convov-core{box-shadow:0 0 26px 3px rgba(140,224,176,.55), inset 0 0 14px rgba(255,255,255,.35)}
+#convOverlay.is-recorded .convov-ring{border-color:rgba(140,224,176,.4);box-shadow:0 0 30px 5px rgba(140,224,176,.2)}
+#convOverlay.is-recorded .convov-status{color:#8CE0B0}
+#convOverlay.is-recorded .convov-transcript{color:#EAF1FF}
+@keyframes convPulseSpeak{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+@keyframes convRingSpeak{0%,100%{box-shadow:0 0 40px 6px rgba(64,132,255,.22);transform:scale(1)}50%{box-shadow:0 0 58px 12px rgba(64,132,255,.4);transform:scale(1.06)}}
+@keyframes convPulseListen{0%,100%{transform:scale(1)}50%{transform:scale(1.07)}}
+@keyframes convRingListen{0%,100%{box-shadow:0 0 30px 4px rgba(64,132,255,.16);transform:scale(1)}50%{box-shadow:0 0 46px 9px rgba(64,132,255,.3);transform:scale(1.03)}}
+.convov-status{font-size:11px;letter-spacing:.28em;font-weight:500;color:#8FB4EF;text-transform:uppercase;margin-bottom:2px}
+.convov-pos{font-size:11px;letter-spacing:.14em;color:rgba(234,241,255,.5);font-variant-numeric:tabular-nums;margin-bottom:14px}
+.convov-q{font-family:var(--disp);font-size:clamp(19px,4.6vw,26px);font-weight:500;line-height:1.6;color:#F3F7FF;text-wrap:balance}
+.convov-transcript{margin-top:20px;font-size:14px;font-weight:300;line-height:1.8;color:rgba(234,241,255,.62);min-height:1.8em;max-width:44em}
+.convov-bottom{display:flex;gap:10px;justify-content:center;padding-top:14px;flex-wrap:wrap}
+.convov-bottom .btn{background:none;border-color:rgba(234,241,255,.28);color:rgba(234,241,255,.82)}
+.convov-bottom .btn:hover{background:rgba(234,241,255,.08);border-color:rgba(234,241,255,.5);color:#fff}
+.convov-bottom .btn:disabled{opacity:.32}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<!-- ===== gate ===== -->
+<div id="gate" class="gatewrap">
+  <div class="gate-mark">継手</div>
+  <p class="gate-rom">T S U G I T E</p>
+  <p class="gate-lede">親子だから、<br>いちばん<em>聞けない</em>。</p>
+  <p class="gate-sub">会社の値段、いつ譲るのか、誰が支えているのか。承継でいちばん重い話ほど、家族の食卓では切り出せません。継手は、その質問を親と子に別々に投げ、二人が納得したときだけ、答えを組み合わせることを目指す道具です。</p>
+  <div class="gate-card">
+    <h4>あなたの立場</h4>
+    <p>どちらとして答えるかを選んでください。あとから変えられます。</p>
+    <div class="roles">
+      <button class="rolebtn" type="button" id="rParent" aria-pressed="false">親 ／ 経営者</button>
+      <button class="rolebtn" type="button" id="rChild" aria-pressed="false">子 ／ 後継者</button>
+    </div>
+    <div id="roomCard" class="hidden">
+      <div id="roomParentView" class="note hidden">
+        <b>あなたのルームコード</b><br>
+        <span id="roomCodeDisplay" style="display:inline-block;margin-top:6px;font-size:19px;font-weight:700;letter-spacing:.12em;color:var(--ai);word-break:break-all"></span><br>
+        このコードを後継者の方に伝えてください。後継者は次の画面でこのコードを入力します。このコードは、お互いの回答を自動で反映させる鍵にもなるので、人に見られないよう扱ってください。
+      </div>
+      <div id="roomChildView" class="hidden">
+        <label for="roomCodeInput" style="font-size:12.5px;font-weight:500;color:var(--muted-2);display:block;margin-bottom:6px">親から伝えられたルームコードを入力してください</label>
+        <input class="field" type="text" id="roomCodeInput" placeholder="例: A1B2C3D4" autocomplete="off" autocapitalize="characters" spellcheck="false" style="text-transform:uppercase">
+        <p class="msg hidden" id="roomCodeMsg">ルームコードを入力してください。</p>
+      </div>
+    </div>
+    <button class="btn primary" type="button" id="startBtn" disabled="">はじめる</button>
+    <p class="note">回答は基本的にこの端末の中だけに保存されます。「まだ開示しない」を選んでいる内容は、どこにも送信されません。「開示する」を選んで確定した内容だけ、相手に届けるためにNetlifyの仕組みを一時的に経由します。音声で入力する機能を使った場合は、聞き取りのためにブラウザの音声認識サービスが話した内容を一時的に扱います。使わなければ、これらの例外はありません。</p>
+  </div>
+</div>
+
+<!-- ===== app ===== -->
+<div id="app" class="hidden">
+  <div class="appbar">
+    <div class="appbar-in">
+      <div class="brand">継手<small>TSUGITE</small></div>
+      <div class="meta">
+        <div class="meta-i"><span class="meta-k">アナタ</span><span class="meta-v" id="barRole">—</span></div>
+        <div class="meta-i"><span class="meta-k">ルーム</span><span class="meta-v" id="barRoom">—</span></div>
+        <div class="meta-i"><span class="meta-k">カイトウズミ</span><span class="meta-v" id="barOpen">0 / 10</span></div>
+      </div>
+    </div>
+    <div class="tabs" role="tablist">
+      <button class="tab" type="button" role="tab" data-tab="answer" aria-selected="true">回答</button>
+      <button class="tab" type="button" role="tab" data-tab="board" aria-selected="false">継手盤</button>
+      <button class="tab" type="button" role="tab" data-tab="agenda" aria-selected="false">論点</button>
+      <button class="tab" type="button" role="tab" data-tab="about" aria-selected="false">しくみ</button>
+    </div>
+  </div>
+
+  <main class="wrap">
+    <!-- 回答 -->
+    <div id="p-answer" role="tabpanel">
+      <p class="panel-t">10問に答える</p>
+      <p class="panel-p">答えることと、見せることは別です。ここでは、まずあなた自身の回答と、その扱い方(開示する・今後伝える、など)を記録します。10問に答え終えたら下で確定して送り、「継手盤」タブで相手との組み合わせを確認してください。</p>
+      <div class="convbar" id="convbar">
+        <button class="btn ghost mini" type="button" id="micPermBtn">🎤 マイクを許可する</button>
+        <button class="btn primary" type="button" id="convStart">🎙 会話モードで進める</button>
+        <div class="convrun hidden" id="convRun">
+          <span class="convpos" id="convPos">1 / 10</span>
+          <button class="btn mini" type="button" id="convPrev">← 前の質問</button>
+          <button class="btn mini" type="button" id="convNext">次の質問 →</button>
+          <button class="btn ghost mini" type="button" id="convStop">会話モードをやめる</button>
+        </div>
+      </div>
+      <p class="msg" id="micPermMsg"></p>
+      <p class="note hidden" id="voiceNote"><b>音声入力について。</b>「🎤 話して入力」は、お使いのブラウザの音声認識機能を使います。ブラウザによっては、聞き取りのために話した内容がブラウザ提供元のサーバーへ一時的に送られることがあります。中身を誰にも渡したくない場合は、キーボードでの入力をお使いください。</p>
+      <div id="answers"></div>
+      <div class="exwrap">
+        <h4 style="font-size:13.5px;font-weight:700;margin-bottom:6px;color:var(--ai)">回答を確定する</h4>
+        <p class="exnote">10問への回答が済んだら、ここで確定してください。「開示する」を選んだ質問の内容だけが相手に送られ、相手の継手盤に反映されます。回答を変えたときは、もう一度押せば最新の内容に更新されます。</p>
+        <button class="btn primary" type="button" id="submitBtn">回答を確定して相手に送る</button>
+        <p class="msg" id="submitMsg"></p>
+      </div>
+      <div class="xrow"><button class="btn ghost" type="button" id="wipe">この端末の回答をすべて消す</button></div>
+    </div>
+
+    <!-- 継手盤 -->
+    <div id="p-board" role="tabpanel" class="hidden">
+      <p class="panel-t">継手盤</p>
+      <p class="panel-p">双方が「開示する」を選んだ質問だけ、二つの材が組み合わさって回答が並びます。片方だけ開くことはありません。「回答」タブで確定して送った内容が、自動でここに反映されます。</p>
+      <div class="xrow"><button class="btn ghost mini" type="button" id="syncNowBtn">今すぐ確認する</button></div>
+      <p class="exnote" id="syncStatusNote"></p>
+      <div id="board"></div>
+    </div>
+
+    <!-- 論点 -->
+    <div id="p-agenda" role="tabpanel" class="hidden">
+      <p class="panel-t">話す論点</p>
+      <p class="panel-p">組み上がった質問のうち、「ここから話したい」と印をつけたものを並べる場所です。この一覧表示は現在準備中です。組み上がった内容そのものは「継手盤」タブで確認できます。</p>
+      <p class="empty">ここに表示する機能は、次のバージョンで実装予定です。</p>
+    </div>
+
+    <!-- しくみ -->
+    <div id="p-about" role="tabpanel" class="about hidden">
+      <p class="panel-t">継手の仕組み</p>
+      <p class="panel-p">これは継手が目指す仕組み全体の説明です。相互開示は「回答」タブで確定して送ることで反映されます（送られるのは、自分が「開示する」を選んだ質問の内容だけです）。</p>
+      <section>
+        <p class="eyebrow">切り出せない理由</p>
+        <h2 class="sec-t">言えないのではなく、<br>言い出す順番が決まらない。</h2>
+        <p class="sec-p">承継が進まない家庭の多くは、対立しているわけではありません。どちらも先に手の内を見せたくないだけです。</p>
+        <div style="margin-top:22px">
+          <div class="prob"><p class="prob-q">今更あらたまって聞くのが、気恥ずかしい</p><p class="prob-a">毎日会っている相手ほど、改まった場をつくれない。</p></div>
+          <div class="prob"><p class="prob-q">こちらから金額を聞くと、催促しているようだ</p><p class="prob-a">株価も借入も個人保証も、子から先には切り出せない。</p></div>
+          <div class="prob"><p class="prob-q">先に本音を言った方が、損をする気がする</p><p class="prob-a">継ぐ気がないと言えば失望させ、継げと言えば縛ることになる。</p></div>
+          <div class="prob"><p class="prob-q">いつでも聞けるから、結局ずっと聞かない</p><p class="prob-a">距離が近いことが、そのまま先送りの理由になる。</p></div>
+        </div>
+      </section>
+      <hr class="rule">
+      <section>
+        <p class="eyebrow">なぜ二回に分けるのか（設計方針）</p>
+        <h2 class="sec-t">先に差し出す人を、<br>つくらないため。</h2>
+        <p class="sec-p">一度で本文をやりとりすると、どちらかが先に渡すことになります。渡した側だけが手の内を見せ、相手は見てから決められる。それでは食卓と同じです。継手は、次の四段階でこれを避けることを目指します。</p>
+        <div style="margin-top:20px">
+          <div class="step"><p class="step-n">一</p><div><p class="step-h">合図を交換する</p><p class="step-b">開示するつもりの問の一覧だけを渡します。本文は含まれません。</p></div></div>
+          <div class="step"><p class="step-n">二</p><div><p class="step-h">封がかかる</p><p class="step-b">合図を渡した時点で、回答は書き換えられなくなります。相手の出方を見てから答えを変えることはできません。</p></div></div>
+          <div class="step"><p class="step-n">三</p><div><p class="step-h">継ぎ札を交換する</p><p class="step-b">双方が開示を選んだ問だけ、本文を書き出して渡します。それ以外は一文字も出ていきません。</p></div></div>
+          <div class="step"><p class="step-n">四</p><div><p class="step-h">指紋と照合する</p><p class="step-b">受け取った本文が、一度目の指紋と一致するかを自動で確かめます。合図のあとで書き換えられていれば、その場でわかります。</p></div></div>
+        </div>
+      </section>
+      <hr class="rule">
+      <section>
+        <p class="eyebrow">回答形式</p>
+        <h2 class="sec-t">「答えたくない」も、<br>ひとつの回答として扱う。</h2>
+        <p class="sec-p">沈黙を空欄にすると、相手には無関心と区別がつきません。継手では黙り方にも種類を持たせます。</p>
+        <div style="margin-top:20px">
+          <div class="opt"><p class="opt-h"><span class="dot d1"></span>開示する</p><p class="opt-b">相手も開示を選んだ問だけ、二人の回答が同時に並びます。相手がまだなら「開示待ち」とだけ伝わります。</p></div>
+          <div class="opt"><p class="opt-h"><span class="dot d2"></span>今は言えないが、今後伝える予定</p><p class="opt-b">中身は伏せたまま、伝える意思があることだけが相手に届きます。「隠している」と「まだ言えていない」を分ける、いちばん重要な選択肢です。</p></div>
+          <div class="opt"><p class="opt-h"><span class="dot d3"></span>まだ考えていない</p><p class="opt-b">これは開示されます。考えていないこと自体が、二人にとって必要な情報だからです。</p></div>
+          <div class="opt"><p class="opt-h"><span class="dot d4"></span>答えたくない</p><p class="opt-b">相手には何も表示されません。選んだことも伝わりません。未回答と区別がつかないようにしてあります。</p></div>
+        </div>
+      </section>
+      <hr class="rule">
+      <section>
+        <p class="eyebrow">聞きづらい2問の扱い（設計方針）</p>
+        <h2 class="sec-t">金の話には、<br>二本の栓をかけるつもりです。</h2>
+        <p class="sec-p">承継の時期（09）と、株価・借入・個人保証（10）は、ほかの8問と同じようには組めないようにする予定です。二つの条件がそろうまで、双方が開示を選んでいても栓は抜けません。</p>
+        <div style="margin-top:20px">
+          <div class="opt"><p class="opt-h"><span class="dot d1"></span>01〜08 が4問、両者で組み上がっていること</p><p class="opt-b">浅い質問の開示を積み上げないと栓は抜けません。順番を飛ばして、金額から入ることはできません。</p></div>
+          <div class="opt"><p class="opt-h"><span class="dot d2"></span>子が「いまは受け取らない」を選んでいないこと</p><p class="opt-b">受け取る準備がないと子が判断した項目は、親が開示を選んでも組めません。継ぐ気があるかを表明させずに、決算書や株価だけを止められます。</p></div>
+        </div>
+      </section>
+      <hr class="rule">
+      <section>
+        <p class="eyebrow">質問設計 ／ 全10問</p>
+        <h2 class="sec-t">事実から入り、<br>金の話で終える。</h2>
+        <p class="sec-p">最初の数問は答えても失うものがない質問です。開示のやりとりを何度か重ねてから、聞きづらい質問に進みます。順番は入れ替えられません。</p>
+        <div class="depth"><span>事実</span><span class="depth-bar"></span><span>核心</span></div>
+      </section>
+      <div class="band">
+        <p class="eyebrow">背景にある知見</p>
+        <h2 class="sec-t">わかっていること、<br>記録が残っていないこと。</h2>
+        <p class="finding">意向を問うより、親から「継げ」と告げられた方が承継はうまくいく。
+          <small>先行研究で確認されている知見です。継手が「継ぐか継がないか」を直接問わないのはこのためで、代わりに、どんな条件なら引き受けられるかを扱います。</small>
+        </p>
+        <p class="finding">中小企業の研究は経営者に偏り、そこで働く人は語られない。
+          <small>誰が支えているのか、次の代を従業員がどう見ているのか。承継の成否を決めるのに、いちばん記録が残っていない部分です。</small>
+        </p>
+      </div>
+      <p class="foot">
+        <b>継手</b><br>
+        親子間事業承継のための相互開示ツール（試作）<br>
+        サーバを使いません。回答はこの端末の中だけに保存されます。ブラウザの保存領域を消すと回答も消えます。音声で入力した場合のみ、聞き取りのためにブラウザの音声認識サービスが話した内容を扱います。相手の回答と組み合わせる機能は現在準備中です。<br>
+        ゼミ研究プロジェクト
+      </p>
+    </div>
+
+  </main>
+</div>
+
+<!-- ===== 会話モード オーバーレイ ===== -->
+<div id="convOverlay" class="hidden" role="dialog" aria-label="会話モード">
+  <button class="convov-exit" type="button" id="convovExit">✕ 会話モードをやめる</button>
+  <div class="convov-mid">
+    <div class="convov-orb" id="convovOrb"><div class="convov-ring"></div><div class="convov-core"></div></div>
+    <p class="convov-status" id="convovStatus">つないでいます…</p>
+    <p class="convov-pos" id="convovPos">1 / 10</p>
+    <p class="convov-q" id="convovQ"></p>
+    <p class="convov-transcript" id="convovTranscript"></p>
+    <button class="btn primary hidden" type="button" id="convovTapFallback">🎤 タップして答える</button>
+  </div>
+  <div class="convov-bottom">
+    <button class="btn mini ghost" type="button" id="convovPrev">← 前の質問</button>
+    <button class="btn mini ghost" type="button" id="convovNext">次の質問 →</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    {id:"q01", t:"会社の創業年と、いまの事業の柱をいくつ挙げられますか。"},
+    {id:"q02", t:"この一年で、会社の話を家族で何回しましたか。"},
+    {id:"q03", t:"会社のことを、あなた以外でいちばんよく知っているのは誰ですか。"},
+    {id:"q04", t:"承継の話を切り出しにくいと感じますか。それはなぜですか。"},
+    {id:"q05", t:"この会社の強みは何だと思いますか。"},
+    {id:"q06", t:"引き継ぐのにいちばん時間がかかるものは何だと思いますか。"},
+    {id:"q07", t:"従業員は次の代について、どこまで知っていると思いますか。"},
+    {id:"q08", t:"承継に第三者が入ることに抵抗はありますか。"},
+    {id:"q09", t:"承継はいつ頃を想定していますか。", hard:true, gated:true},
+    {id:"q10", t:"株価・借入・個人保証・役員報酬を、どこまで共有できますか。", hard:true, gated:true}
+  ];
+  var GATE_MIN = 4;
+  var STANCES = [
+    {id:"hold",    label:"まだ開示しない",   note:"この端末に保存されるだけです。"},
+    {id:"open",    label:"開示する",         note:"相手も「開示する」を選んだときだけ、継手盤で二人分が並びます。下の「回答を確定して相手に送る」を押すと反映されます。"},
+    {id:"later",   label:"今後伝える",       note:"本文は明かさず、伝える意思があることだけを記録します。"},
+    {id:"unknown", label:"まだ考えていない", note:"考えていないことも、ひとつの記録として残します。"},
+    {id:"refuse",  label:"答えたくない",     note:"この端末にだけ記録され、回答済みの数には数えません。"}
+  ];
+  var QMAP = {}; QUESTIONS.forEach(function(q){ QMAP[q.id] = q; });
+  var ROLE_LABEL = {parent:"親 ／ 経営者", child:"子 ／ 後継者"};
+  var KEY = "tsugite.v1";
+  var ROOM_KEY = "tsugite.roomcode";
+  var ROOM_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; /* 0/O, 1/I を除外して読み間違いを防ぐ */
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ---------- state ---------- */
+  var S = {role:null, items:{}, peer1:null, peer2:null};
+
+  function load(){
+    try {
+      var raw = window.localStorage.getItem(KEY);
+      if (raw) {
+        var o = JSON.parse(raw);
+        if (o && typeof o === "object") { Object.keys(S).forEach(function(k){ if (k in o) S[k] = o[k]; }); }
+      }
+    } catch(e){}
+  }
+  function persist(){
+    try { window.localStorage.setItem(KEY, JSON.stringify(S)); } catch(e){}
+  }
+  function item(id){
+    var it = S.items[id];
+    return {
+      text: (it && typeof it.text === "string") ? it.text : "",
+      stance: (it && it.stance) || "hold",
+      talk: !!(it && it.talk),
+      noRecv: !!(it && it.noRecv)
+    };
+  }
+  function setItem(id, patch){
+    var cur = item(id);
+    Object.keys(patch).forEach(function(k){ cur[k] = patch[k]; });
+    S.items[id] = cur;
+    persist();
+  }
+
+  /* ---------- small utils ---------- */
+  function esc(s){
+    return String(s).replace(/[&<>"]/g, function(c){
+      return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];
+    });
+  }
+  function num(i){ var n = String(i+1); return n.length < 2 ? "0" + n : n; }
+
+  /* ---------- voice: speak (text-to-speech) ---------- */
+  var canSpeak = !!(window.speechSynthesis && window.SpeechSynthesisUtterance);
+  function speak(text){
+    if (!canSpeak) return;
+    try {
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      u.lang = "ja-JP";
+      window.speechSynthesis.speak(u);
+    } catch(e){}
+  }
+
+  /* ---------- 音声入力の簡易要約 ---------- */
+  // サーバーには送らず、この端末の中だけで完結する簡易的な要約。
+  // 話し言葉特有の言いよどみ（フィラー）を取り除き、長すぎる場合は
+  // 文の区切りを保ったまま短くする。実際の内容理解による要約ではなく、
+  // あくまで聞き取った文をそのまま書き留めない、という簡易処理。
+  var FILLER_WORDS = [
+    "えーっと","えーと","えっと","あのー","あの","そのー",
+    "まあ","まぁ","なんか","なんていうか","なんというか",
+    "ちょっと","うーんと","うーん","んー","そうですねー","そうですね",
+    "そうだなあ","そうだな","やっぱり","やっぱ","えー","あー"
+  ];
+  function stripFillers(s){
+    var out = s;
+    FILLER_WORDS.forEach(function(w){ out = out.split(w).join(""); });
+    /* フィラーを取り除いた跡に残る読点の重なりや、文頭・句点前の読点を整える */
+    out = out.replace(/、{2,}/g, "、").replace(/^[、\s]+/, "").replace(/、(?=[。！？])/g, "");
+    return out;
+  }
+  var SUMMARY_MAX_LEN = 140;
+  function summarizeSpeech(raw){
+    var text = (raw || "").trim();
+    if (!text) return text;
+    var parts = text.split(/(?<=[。！？])/).map(function(s){ return s.trim(); }).filter(Boolean);
+    var cleaned = [], prev = null;
+    parts.forEach(function(p){
+      var s = stripFillers(p).trim();
+      if (!s || /^[、。！？\s]*$/.test(s)) return;
+      if (s === prev) return; /* 直前と全く同じ文は重複として省く */
+      cleaned.push(s); prev = s;
+    });
+    if (!cleaned.length) return text; /* 全体がフィラー扱いになった場合は元の文を残す */
+    var joined = cleaned.join("");
+    if (joined.length <= SUMMARY_MAX_LEN) return joined;
+    var out = "";
+    for (var i = 0; i < cleaned.length; i++) {
+      if ((out + cleaned[i]).length > SUMMARY_MAX_LEN) break;
+      out += cleaned[i];
+    }
+    if (!out) out = joined.slice(0, SUMMARY_MAX_LEN);
+    return out.replace(/[。、]+$/, "") + "…";
+  }
+
+  /* ---------- voice: listen (speech-to-text) ---------- */
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var canListen = !!SR;
+  var activeRec = null;
+  // 聞き取った内容を要約して保存する。無音検知タイマーとonendの両方から
+  // 呼ばれうるので、二重に要約しないようstate.finalizedで一度だけに絞る。
+  function finalizeText(state){
+    var id = state.id;
+    if (state.finalized) return item(id).text;
+    state.finalized = true;
+    var full = item(id).text;
+    var preBase = state.preBase || "";
+    var added = full.length > preBase.length ? full.slice(preBase.length) : full;
+    if (added.trim()) {
+      var finalText = preBase + summarizeSpeech(added);
+      if (finalText !== full) {
+        setItem(id, {text: finalText});
+        var card = document.querySelector('.acard[data-q="' + id + '"]');
+        var ta = card ? card.querySelector('[data-role="text"]') : null;
+        if (ta) ta.value = finalText;
+      }
+    }
+    return item(id).text;
+  }
+  function finishListening(state, btn, stateEl){
+    if (activeRec === state) activeRec = null;
+    btn.setAttribute("aria-pressed", "false");
+    btn.textContent = "🎤 話して入力";
+    stateEl.classList.add("hidden");
+    finalizeText(state);
+    render();
+  }
+  function stopListening(){
+    if (activeRec) {
+      activeRec.stopping = true;
+      if (activeRec.silenceTimer) { clearTimeout(activeRec.silenceTimer); activeRec.silenceTimer = null; }
+      try { activeRec.rec.stop(); } catch(e){}
+    }
+  }
+  // 端末やブラウザによっては、少し黙っただけで聞き取りが自動的に途切れる
+  // （continuous指定が効かない）ことがあるため、こちらから止めていない限りは
+  // 自動で聞き取りを再開する。無音状態がずっと続く場合は諦めて止める。
+  var RESTART_LIMIT = 40;
+  // opts.silenceMs / opts.onSilence を渡すと、その時間だけ発話が途切れたところで
+  // 自動的に聞き取りを打ち切る（会話モードでの「話し終えたら次へ」に使う）。
+  // 戻り値: 聞き取りの開始を試みられたら true、SR自体が使えなければ false。
+  function startListening(id, btn, stateEl, opts){
+    if (!canListen) return false;
+    if (activeRec && activeRec.id === id) return true; // 二重起動を防ぐ
+    stopListening();
+    var base = item(id).text;
+    var card = document.querySelector('.acard[data-q="' + id + '"]');
+    var ta = card ? card.querySelector('[data-role="text"]') : null;
+    var state = {id:id, stopping:false, restarts:0, gotSpeech:false, silenceTimer:null, opts:opts || null, preBase:base};
+    activeRec = state;
+    btn.setAttribute("aria-pressed", "true");
+    btn.textContent = "■ 聞き取りを止める";
+    stateEl.classList.remove("hidden");
+    stateEl.textContent = "聞き取り中…話してください";
+
+    function armSilenceTimer(){
+      if (!state.opts || !state.opts.silenceMs) return;
+      if (state.silenceTimer) clearTimeout(state.silenceTimer);
+      state.silenceTimer = setTimeout(function(){
+        if (activeRec !== state) return;
+        state.stopping = true;
+        state.silenceTimer = null;
+        var finalText = finalizeText(state);
+        try { state.rec.stop(); } catch(e){}
+        if (state.opts.onSilence) state.opts.onSilence(finalText);
+      }, state.opts.silenceMs);
+    }
+
+    function attach(rec){
+      state.rec = rec;
+      rec.lang = "ja-JP";
+      rec.continuous = true;
+      rec.interimResults = true;
+      rec.onresult = function(ev){
+        state.gotSpeech = true;
+        state.restarts = 0;
+        var interim = "";
+        for (var i = ev.resultIndex; i < ev.results.length; i++) {
+          var tr = ev.results[i][0].transcript;
+          if (ev.results[i].isFinal) base += tr; else interim += tr;
+        }
+        if (ta) ta.value = base + interim;
+        setItem(id, {text: base});
+        stateEl.textContent = interim ? ("認識中: " + interim) : "聞き取り中…話してください";
+        armSilenceTimer();
+      };
+      rec.onerror = function(ev){
+        if (ev.error === "not-allowed" || ev.error === "service-not-allowed") {
+          state.stopping = true;
+          if (stateEl) stateEl.textContent = "マイクの使用が許可されていません。ブラウザやOSの設定でマイクへのアクセスを許可してください。";
+        } else if (ev.error === "audio-capture") {
+          state.stopping = true;
+          if (stateEl) stateEl.textContent = "マイクが見つかりません。他のアプリがマイクを使っていないか確認してください。";
+        } else if (ev.error === "no-speech" || ev.error === "aborted") {
+          // 無音・中断は自動再開に任せる（onendで処理する）
+        } else {
+          if (stateEl) stateEl.textContent = "音声認識でエラーが発生しました（" + ev.error + "）。もう一度お試しください。";
+        }
+      };
+      rec.onend = function(){
+        if (activeRec !== state) return; // 既に別の聞き取りに切り替わっている
+        if (!state.stopping && state.restarts < RESTART_LIMIT) {
+          state.restarts++;
+          try { var r2 = new SR(); attach(r2); r2.start(); return; } catch(e){}
+        }
+        if (state.silenceTimer) { clearTimeout(state.silenceTimer); state.silenceTimer = null; }
+        finishListening(state, btn, stateEl);
+      };
+    }
+    try { var rec0 = new SR(); attach(rec0); rec0.start(); } catch(e){ finishListening(state, btn, stateEl); return false; }
+    return true;
+  }
+  if (!canSpeak && !canListen) { $("convStart").classList.add("hidden"); }
+  if (canListen) { $("voiceNote").classList.remove("hidden"); }
+
+  /* ---------- voice: マイクを明示的に許可してもらうボタン ---------- */
+  // ブラウザの設定メニューを自分で探してもらうのではなく、ここから直接
+  // マイクの許可ダイアログを呼び出せるようにする。
+  (function(){
+    var micPermBtn = $("micPermBtn");
+    var micPermMsg = $("micPermMsg");
+    if (!canListen) { if (micPermBtn) micPermBtn.remove(); return; }
+    if (!micPermBtn) return;
+    var LABEL = "🎤 マイクを許可する";
+    function showMsg(text, ok){
+      if (!micPermMsg) return;
+      micPermMsg.className = ok ? "msg ok" : "msg";
+      micPermMsg.textContent = text;
+    }
+    function done(text, ok){
+      micPermBtn.disabled = false;
+      micPermBtn.textContent = LABEL;
+      showMsg(text, ok);
+    }
+    micPermBtn.addEventListener("click", function(){
+      micPermBtn.disabled = true;
+      micPermBtn.textContent = "確認中…";
+      showMsg("", false);
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+          try { stream.getTracks().forEach(function(t){ t.stop(); }); } catch(e){}
+          done("✓ マイクの使用を許可しました。「🎤 話して入力」や会話モードが使えます。", true);
+        }).catch(function(){
+          done("マイクの使用が許可されませんでした。ブラウザの設定でこのサイトへのマイクアクセスを許可してから、もう一度お試しください。", false);
+        });
+      } else {
+        // getUserMediaが使えない環境向けの保険。SpeechRecognitionを一瞬だけ起動し、
+        // 許可ダイアログを促してからすぐに止める。
+        try {
+          var rec = new SR();
+          rec.lang = "ja-JP";
+          var settled = false;
+          rec.onerror = function(ev){
+            if (settled) return;
+            settled = true;
+            if (ev.error === "not-allowed" || ev.error === "service-not-allowed") {
+              done("マイクの使用が許可されませんでした。ブラウザの設定でこのサイトへのマイクアクセスを許可してから、もう一度お試しください。", false);
+            } else {
+              done("マイクを確認できませんでした。他のアプリがマイクを使っていないか確認してください。", false);
+            }
+          };
+          rec.onstart = function(){
+            try { rec.stop(); } catch(e){}
+            if (settled) return;
+            settled = true;
+            done("✓ マイクの使用を許可しました。「🎤 話して入力」や会話モードが使えます。", true);
+          };
+          rec.start();
+        } catch(e){
+          done("マイクを確認できませんでした。ブラウザの設定を確認してください。", false);
+        }
+      }
+    });
+  })();
+
+  /* ---------- voice: conversation mode ---------- */
+  var conv = {on:false, idx:0, retryListen:null, advanceTimer:null};
+  var convTranscriptTimer = null;
+
+  function setConvState(state, text){
+    var ov = $("convOverlay");
+    ov.classList.remove("is-speaking", "is-listening", "is-waiting", "is-recorded");
+    if (state) ov.classList.add("is-" + state);
+    $("convovStatus").textContent = text || "";
+  }
+  function startConvTranscriptWatch(qid){
+    stopConvTranscriptWatch();
+    convTranscriptTimer = setInterval(function(){
+      $("convovTranscript").textContent = item(qid).text || "";
+    }, 250);
+  }
+  function stopConvTranscriptWatch(){
+    if (convTranscriptTimer) { clearInterval(convTranscriptTimer); convTranscriptTimer = null; }
+  }
+
+  function convShow(){
+    if (conv.advanceTimer) { clearTimeout(conv.advanceTimer); conv.advanceTimer = null; }
+    var cards = $("answers").querySelectorAll(".acard");
+    Array.prototype.forEach.call(cards, function(c, i){ c.classList.toggle("current", i === conv.idx); });
+    var q = QUESTIONS[conv.idx];
+    var posText = (conv.idx + 1) + " / " + QUESTIONS.length;
+    $("convPos").textContent = posText;
+    $("convovPos").textContent = posText;
+    $("convovQ").textContent = q.t;
+    $("convovTranscript").textContent = "";
+    $("convovTapFallback").classList.add("hidden");
+    if (cards[conv.idx]) cards[conv.idx].scrollIntoView({behavior:"smooth", block:"start"});
+    $("convPrev").disabled = conv.idx === 0;
+    $("convovPrev").disabled = conv.idx === 0;
+    var nextLabel = (conv.idx === QUESTIONS.length - 1) ? "会話モードを終える" : "次の質問 →";
+    $("convNext").textContent = nextLabel;
+    $("convovNext").textContent = nextLabel;
+    convPlay();
+  }
+  // 会話モードでは、AIが質問を読み上げたら自動で聞き取りを始め、
+  // 話し終えて少し黙ったところで自動的に次の質問へ進む。ボタン操作なしで
+  // 「AIと話しているだけ」に近い流れになることを狙っている。
+  var CONV_SILENCE_MS = 2200;
+  var CONV_RECORDED_PAUSE_MS = 1400;
+  function convAdvance(){
+    if (!conv.on) return;
+    if (conv.idx < QUESTIONS.length - 1) { conv.idx++; convShow(); } else { convExit(); }
+  }
+  // 話し終えた直後に、記録された内容を一瞬だけ見せてから次の質問へ進む。
+  // 何も表示せず即座に切り替わると、聞き取れているのか不安になるため。
+  function convOnSilence(finalText){
+    if (!conv.on) return;
+    stopConvTranscriptWatch();
+    var hasText = !!(finalText && finalText.trim());
+    setConvState("recorded", hasText ? "✓ 記録しました" : "発話が確認できませんでした");
+    $("convovTranscript").textContent = hasText ? finalText : "";
+    if (conv.advanceTimer) clearTimeout(conv.advanceTimer);
+    conv.advanceTimer = setTimeout(function(){
+      conv.advanceTimer = null;
+      if (conv.on) convAdvance();
+    }, CONV_RECORDED_PAUSE_MS);
+  }
+  function convPlay(){
+    var card = $("answers").querySelectorAll(".acard")[conv.idx];
+    if (!card) return;
+    var q = QUESTIONS[conv.idx];
+    var micBtn = card.querySelector('[data-role="mic"]');
+    var micState = card.querySelector('[data-role="micstate"]');
+    stopListening();
+    stopConvTranscriptWatch();
+    function beginListening(){
+      if (!conv.on || !canListen || !micBtn) return;
+      $("convovTapFallback").classList.add("hidden");
+      setConvState("listening", "聞いています…");
+      startConvTranscriptWatch(q.id);
+      var ok = startListening(q.id, micBtn, micState, {
+        silenceMs: CONV_SILENCE_MS,
+        onSilence: convOnSilence
+      });
+      // ブラウザによっては、読み上げ直後の自動起動がブロックされることがある。
+      // その場合だけ、手動でタップする案内を出す（会話が止まってしまわないように）。
+      if (!ok) {
+        stopConvTranscriptWatch();
+        setConvState("waiting", "お待ちしています");
+        $("convovTapFallback").classList.remove("hidden");
+        if (micState) {
+          micState.classList.remove("hidden");
+          micState.textContent = "🎤 話して入力 をタップして答えてください";
+        }
+      }
+    }
+    conv.retryListen = beginListening;
+    if (canSpeak) {
+      setConvState("speaking", "話しています…");
+      try { window.speechSynthesis.cancel(); } catch(e){}
+      var u = new SpeechSynthesisUtterance(q.t);
+      u.lang = "ja-JP";
+      u.onend = function(){ beginListening(); };
+      window.speechSynthesis.speak(u);
+    } else {
+      beginListening();
+    }
+  }
+  function convEnter(){
+    if (!canSpeak && !canListen) return;
+    conv.on = true; conv.idx = 0;
+    $("answers").classList.add("convmode");
+    $("convStart").classList.add("hidden");
+    $("convRun").classList.remove("hidden");
+    $("convOverlay").classList.remove("hidden");
+    setConvState(null, "つないでいます…");
+    convShow();
+  }
+  function convExit(){
+    conv.on = false;
+    if (conv.advanceTimer) { clearTimeout(conv.advanceTimer); conv.advanceTimer = null; }
+    stopListening();
+    stopConvTranscriptWatch();
+    try { window.speechSynthesis.cancel(); } catch(e){}
+    $("answers").classList.remove("convmode");
+    $("convStart").classList.remove("hidden");
+    $("convRun").classList.add("hidden");
+    $("convOverlay").classList.add("hidden");
+  }
+  $("convStart").addEventListener("click", convEnter);
+  $("convPrev").addEventListener("click", function(){ if (conv.idx > 0) { conv.idx--; convShow(); } });
+  $("convNext").addEventListener("click", convAdvance);
+  $("convStop").addEventListener("click", convExit);
+  $("convovExit").addEventListener("click", convExit);
+  $("convovPrev").addEventListener("click", function(){ if (conv.idx > 0) { conv.idx--; convShow(); } });
+  $("convovNext").addEventListener("click", convAdvance);
+  $("convovTapFallback").addEventListener("click", function(){
+    if (conv.retryListen) conv.retryListen();
+  });
+
+  /* ---------- gate rules ---------- */
+  function peerStance(id){
+    if (!S.peer1 || !S.peer1.items) return null;
+    var it = S.peer1.items[id];
+    return it ? (it.s || "hold") : "hold";
+  }
+  function peerNoRecv(id){
+    if (!S.peer1 || !S.peer1.items) return false;
+    var it = S.peer1.items[id];
+    return !!(it && it.n);
+  }
+  function openedBase(){
+    var n = 0;
+    QUESTIONS.forEach(function(q){
+      if (q.gated) return;
+      if (item(q.id).stance === "open" && peerStance(q.id) === "open") n++;
+    });
+    return n;
+  }
+  function childHold(id){
+    return (S.role === "child") ? item(id).noRecv : peerNoRecv(id);
+  }
+  function lockState(q){
+    if (!q.gated) return null;
+    if (childHold(q.id)) return "held";
+    if (openedBase() < GATE_MIN) return "stage";
+    return null;
+  }
+  function mutual(q){
+    return !lockState(q) && item(q.id).stance === "open" && peerStance(q.id) === "open";
+  }
+
+  /* ---------- boot ---------- */
+  load();
+  if (S.role) { setRole(S.role); openApp(); }
+
+  /* ---------- room code ---------- */
+  var ROOM_CODE_LEN = 8; // 相手の端末に自動反映するための鍵として使うため、推測されにくい長さにしてある
+  function genRoomCode(){
+    var s = "";
+    for (var i = 0; i < ROOM_CODE_LEN; i++) s += ROOM_CHARS[Math.floor(Math.random() * ROOM_CHARS.length)];
+    return s;
+  }
+  function getRoomCode(){
+    var code = null;
+    try { code = localStorage.getItem(ROOM_KEY); } catch(e){}
+    return code;
+  }
+  function getOrCreateParentRoomCode(){
+    var code = getRoomCode();
+    if (!code) {
+      code = genRoomCode();
+      try { localStorage.setItem(ROOM_KEY, code); } catch(e){}
+    }
+    return code;
+  }
+  function updateStartEnabled(){
+    var ok = !!S.role;
+    if (S.role === "child") ok = ok && $("roomCodeInput").value.trim().length > 0;
+    $("startBtn").disabled = !ok;
+  }
+  function updateRoomUI(){
+    var roomCard = $("roomCard"), parentView = $("roomParentView"), childView = $("roomChildView");
+    if (!S.role) { roomCard.classList.add("hidden"); updateStartEnabled(); return; }
+    roomCard.classList.remove("hidden");
+    if (S.role === "parent") {
+      parentView.classList.remove("hidden");
+      childView.classList.add("hidden");
+      $("roomCodeDisplay").textContent = getOrCreateParentRoomCode();
+    } else {
+      parentView.classList.add("hidden");
+      childView.classList.remove("hidden");
+    }
+    updateStartEnabled();
+  }
+  $("roomCodeInput").addEventListener("input", function(){
+    $("roomCodeMsg").classList.add("hidden");
+    updateStartEnabled();
+  });
+
+  function setRole(r){
+    S.role = r;
+    $("rParent").setAttribute("aria-pressed", String(r === "parent"));
+    $("rChild").setAttribute("aria-pressed", String(r === "child"));
+    updateRoomUI();
+  }
+  $("rParent").addEventListener("click", function(){ setRole("parent"); });
+  $("rChild").addEventListener("click", function(){ setRole("child"); });
+  $("startBtn").addEventListener("click", function(){
+    if (!S.role) return;
+    if (S.role === "child") {
+      var code = $("roomCodeInput").value.trim().toUpperCase();
+      if (!code) { $("roomCodeMsg").classList.remove("hidden"); return; }
+      try { localStorage.setItem(ROOM_KEY, code); } catch(e){}
+    }
+    persist();
+    openApp();
+  });
+
+  /* ---------- peer sync (ルームコードを鍵にした自動反映。開示した回答だけが対象) ---------- */
+  var SYNC_ENDPOINT = "/.netlify/functions/sync";
+  var BOARD_POLL_MS = 15000;
+  var boardPollTimer = null;
+
+  // 「開示する」を選んだ質問だけ本文を含める。それ以外の中身は送信されない。
+  function buildExportPayload(){
+    var items = {};
+    QUESTIONS.forEach(function(q){
+      var it = item(q.id);
+      var entry = {s: it.stance, n: it.noRecv ? 1 : 0};
+      if (it.stance === "open" && it.text.trim() !== "") entry.t = it.text;
+      items[q.id] = entry;
+    });
+    return {v:1, role:S.role, items:items};
+  }
+  function importPeerPayload(payload, at){
+    var peerItems = {}, peerTexts = {};
+    Object.keys(payload.items || {}).forEach(function(id){
+      if (!QMAP[id]) return;
+      var e = payload.items[id] || {};
+      peerItems[id] = {s: e.s || "hold", n: !!e.n};
+      if (typeof e.t === "string") peerTexts[id] = e.t;
+    });
+    S.peer1 = {items: peerItems, role: payload.role || null, at: at || Date.now()};
+    S.peer2 = {texts: peerTexts};
+    persist();
+  }
+  function getSyncKey(){
+    var code = getRoomCode();
+    return code ? String(code).toUpperCase() : null;
+  }
+  function pushMyAnswers(onDone){
+    var key = getSyncKey();
+    if (!key || !S.role) { if (onDone) onDone(false, "ルームコードが見つかりません。"); return; }
+    fetch(SYNC_ENDPOINT, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({key: key, role: S.role, payload: buildExportPayload()})
+    }).then(function(r){ if (!r.ok) throw new Error("status " + r.status); return r.json(); })
+      .then(function(){ if (onDone) onDone(true); })
+      .catch(function(){ if (onDone) onDone(false, "送信できませんでした。通信環境を確認して、もう一度お試しください。"); });
+  }
+  function pullPeerAnswers(onDone){
+    var key = getSyncKey();
+    if (!key || !S.role) { if (onDone) onDone(false); return; }
+    fetch(SYNC_ENDPOINT + "?key=" + encodeURIComponent(key) + "&role=" + encodeURIComponent(S.role))
+      .then(function(r){ if (!r.ok) throw new Error("status " + r.status); return r.json(); })
+      .then(function(data){
+        if (data && data.peer && data.peer.payload) {
+          importPeerPayload(data.peer.payload, data.peer.at);
+          render();
+        }
+        if (onDone) onDone(true);
+      })
+      .catch(function(){ if (onDone) onDone(false); });
+  }
+  function fmtDateTime(ts){
+    var d = new Date(ts), pad = function(n){ return n < 10 ? "0" + n : String(n); };
+    return d.getFullYear() + "/" + pad(d.getMonth()+1) + "/" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes());
+  }
+  function updateSyncStatusNote(extra){
+    var el = $("syncStatusNote");
+    if (!el) return;
+    var base = (S.peer1 && S.peer1.at) ? ("相手の回答を最後に受け取った日時: " + fmtDateTime(S.peer1.at)) : "まだ相手の回答を受け取っていません。";
+    el.textContent = extra ? (extra + "　" + base) : base;
+  }
+  function startBoardPolling(){
+    stopBoardPolling();
+    pullPeerAnswers(function(ok){ updateSyncStatusNote(ok ? "" : "（相手の状況を確認できませんでした）"); });
+    boardPollTimer = setInterval(function(){ pullPeerAnswers(function(){ updateSyncStatusNote(); }); }, BOARD_POLL_MS);
+  }
+  function stopBoardPolling(){
+    if (boardPollTimer) { clearInterval(boardPollTimer); boardPollTimer = null; }
+  }
+  document.addEventListener("visibilitychange", function(){
+    var boardShown = !$("p-board").classList.contains("hidden");
+    if (!boardShown) return;
+    if (document.hidden) { stopBoardPolling(); }
+    else { startBoardPolling(); }
+  });
+  (function(){
+    var submitBtn = $("submitBtn"), submitMsg = $("submitMsg");
+    if (submitBtn) {
+      submitBtn.addEventListener("click", function(){
+        submitBtn.disabled = true;
+        submitMsg.className = "msg";
+        submitMsg.textContent = "送信しています…";
+        pushMyAnswers(function(ok, err){
+          submitBtn.disabled = false;
+          if (ok) { submitMsg.className = "msg ok"; submitMsg.textContent = "✓ 確定して送りました。継手盤タブで、相手の状況を確認できます。"; }
+          else { submitMsg.className = "msg"; submitMsg.textContent = err || "送信できませんでした。"; }
+        });
+      });
+    }
+    var syncNowBtn = $("syncNowBtn");
+    if (syncNowBtn) {
+      syncNowBtn.addEventListener("click", function(){
+        syncNowBtn.disabled = true;
+        pullPeerAnswers(function(ok){
+          syncNowBtn.disabled = false;
+          updateSyncStatusNote(ok ? "✓ 確認しました。" : "（相手の状況を確認できませんでした）");
+        });
+      });
+    }
+    updateSyncStatusNote();
+  })();
+
+  function openApp(){
+    $("gate").classList.add("hidden");
+    $("app").classList.remove("hidden");
+    $("barRole").textContent = ROLE_LABEL[S.role];
+    $("barRoom").textContent = getRoomCode() || "—";
+    if (!$("answers").children.length) { buildAnswers(); buildBoard(); }
+    render();
+  }
+
+  /* ---------- tabs ---------- */
+  var PANELS = {answer:"p-answer", board:"p-board", agenda:"p-agenda", about:"p-about"};
+  function showTab(name){
+    Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(o){
+      o.setAttribute("aria-selected", String(o.getAttribute("data-tab") === name));
+    });
+    Object.keys(PANELS).forEach(function(k){ $(PANELS[k]).classList.toggle("hidden", k !== name); });
+    if (name !== "answer") { stopListening(); if (conv.on) convExit(); }
+    if (name === "board") { startBoardPolling(); } else { stopBoardPolling(); }
+    window.scrollTo(0, 0);
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".tab"), function(t){
+    t.addEventListener("click", function(){ showTab(t.getAttribute("data-tab")); });
+  });
+
+  /* ---------- build ---------- */
+  function buildAnswers(){
+    var host = $("answers"); host.innerHTML = "";
+    QUESTIONS.forEach(function(q, i){
+      var card = document.createElement("div");
+      card.className = "acard" + (q.hard ? " is-hard" : "");
+      card.setAttribute("data-q", q.id);
+      card.innerHTML =
+          '<div class="qhead"><span class="qnum">' + num(i) + '</span><span class="qtext">' + esc(q.t) + '</span>'
+        + (q.hard ? '<span class="qtag">聞きづらい</span>' : '') + '</div>'
+        + '<p class="mylabel">アナタノカイトウ</p>'
+        + '<div class="voicebar" role="group" aria-label="音声で読み上げ・入力">'
+        +   '<button type="button" class="btn mini" data-role="tts" aria-label="この設問を読み上げる">🔊 読み上げる</button>'
+        +   '<button type="button" class="btn mini" data-role="mic" aria-pressed="false" aria-label="音声で入力する">🎤 話して入力</button>'
+        +   '<span class="micstate hidden" data-role="micstate" role="status"></span>'
+        + '</div>'
+        + '<textarea class="field" data-role="text" rows="3" aria-label="' + esc(q.t) + ' への回答"></textarea>'
+        + '<div class="stances" role="group" aria-label="この回答の扱い"></div>'
+        + '<p class="stnote" data-role="stnote"></p>'
+        + (q.gated
+            ? '<div class="recv hidden" data-role="recv"><span class="recv-k">コノコウモクノウケトリ</span>'
+              + '<div class="recv-b" role="group" aria-label="この項目を受け取るか">'
+              + '<button type="button" class="st" data-recv="on" aria-pressed="false">受け取る</button>'
+              + '<button type="button" class="st" data-recv="off" aria-pressed="false">いまは受け取らない</button>'
+              + '</div><p class="recv-note" data-role="recvnote"></p></div>'
+            : '');
+
+      var group = card.querySelector(".stances");
+      STANCES.forEach(function(s){
+        var b = document.createElement("button");
+        b.type = "button"; b.className = "st";
+        b.setAttribute("data-stance", s.id);
+        b.setAttribute("aria-pressed", "false");
+        b.textContent = s.label;
+        b.addEventListener("click", function(){
+          setItem(q.id, {stance: s.id});
+          render();
+        });
+        group.appendChild(b);
+      });
+      var ta = card.querySelector('[data-role="text"]');
+      ta.addEventListener("input", function(){
+        setItem(q.id, {text: ta.value});
+        render();
+      });
+      var ttsBtn = card.querySelector('[data-role="tts"]');
+      var micBtn = card.querySelector('[data-role="mic"]');
+      var micState = card.querySelector('[data-role="micstate"]');
+      if (canSpeak) {
+        ttsBtn.addEventListener("click", function(){ speak(q.t); });
+      } else {
+        ttsBtn.remove();
+      }
+      if (canListen) {
+        micBtn.addEventListener("click", function(){
+          if (activeRec && activeRec.id === q.id) stopListening();
+          else startListening(q.id, micBtn, micState);
+        });
+      } else {
+        micBtn.remove();
+        micState.remove();
+      }
+      if (!canSpeak && !canListen) {
+        var vb = card.querySelector(".voicebar");
+        if (vb) vb.remove();
+      }
+      if (q.gated) {
+        Array.prototype.forEach.call(card.querySelectorAll("[data-recv]"), function(b){
+          b.addEventListener("click", function(){
+            if (S.role !== "child") return;
+            setItem(q.id, {noRecv: b.getAttribute("data-recv") === "off"});
+            render();
+          });
+        });
+      }
+      host.appendChild(card);
+    });
+  }
+
+  function jointSVG(){
+    return '<div class="joint" aria-hidden="true"><svg viewBox="0 0 120 56">'
+      + '<g class="jp jp-l"><path d="M6 8 H84 V28 H60 V48 H6 Z"/></g>'
+      + '<g class="jp jp-r"><path d="M114 8 H84 V28 H60 V48 H114 Z"/></g>'
+      + '<circle class="peg" cx="72" cy="28" r="5.2"/></svg></div>';
+  }
+
+  function buildBoard(){
+    var host = $("board"); host.innerHTML = "";
+    QUESTIONS.forEach(function(q, i){
+      var row = document.createElement("div");
+      row.className = "brow" + (q.hard ? " is-hard" : "");
+      row.setAttribute("data-q", q.id);
+      row.innerHTML =
+          '<div class="qhead"><span class="qnum">' + num(i) + '</span><span class="qtext">' + esc(q.t) + '</span>'
+        + (q.hard ? '<span class="qtag">聞きづらい</span>' : '') + '</div>'
+        + '<div class="lockbar hidden" data-role="lockbar"><span class="sen">栓</span><span data-role="locktext"></span></div>'
+        + '<div class="jointwrap">' + jointSVG() + '<p class="jstate" data-role="jstate"></p></div>'
+        + '<div class="tally">'
+        + '<div class="half left"><p class="half-role" data-role="roleL"></p><p class="half-ans" data-role="ansL"></p></div>'
+        + '<div class="half"><p class="half-role" data-role="roleR"></p><p class="half-ans" data-role="ansR"></p></div>'
+        + '</div>'
+        + '<div class="talkrow hidden" data-role="talkrow"><label><input type="checkbox" data-role="talk"><span class="box"></span><span>ここから話したい</span></label></div>';
+      row.querySelector('[data-role="talk"]').addEventListener("change", function(){
+        setItem(q.id, {talk: this.checked});
+      });
+      host.appendChild(row);
+    });
+  }
+
+  /* ---------- views ---------- */
+  function peerView(id, isMutual){
+    var st = peerStance(id);
+    if (st === null) return {kind:"state", cls:"wait", t:"相手の回答はまだ届いていません"};
+    switch (st) {
+      case "open":    return isMutual ? {kind:"text"} : {kind:"state", cls:"wait", t:"開示待ち"};
+      case "later":   return {kind:"state", cls:"later", t:"今は言えないが、今後伝える予定"};
+      case "unknown": return {kind:"state", cls:"", t:"まだ考えていない"};
+      default:        return {kind:"state", cls:"", t:"未回答"};
+    }
+  }
+  function selfView(it, isMutual){
+    if (isMutual) return {kind:"text"};
+    switch (it.stance) {
+      case "open":    return {kind:"state", cls:"wait", t:"開示を選びました。相手の開示待ちです"};
+      case "later":   return {kind:"state", cls:"later", t:"今後伝える予定として届きます"};
+      case "unknown": return {kind:"state", cls:"", t:"まだ考えていない（相手に届きます）"};
+      case "refuse":  return {kind:"state", cls:"", t:"答えたくない（相手には何も届きません）"};
+      default:        return {kind:"state", cls:"", t: it.text ? "この端末にだけ保存されています" : "未回答"};
+    }
+  }
+  function withLock(view, lock){
+    if (lock && view.kind === "state" && view.cls === "wait") {
+      return {kind:"state", cls:"wait", t:"開示を選択済み（まだ栓がかかっています）"};
+    }
+    return view;
+  }
+  function fillHalf(roleEl, ansEl, labelHTML, view, text){
+    roleEl.innerHTML = labelHTML;
+    ansEl.className = "half-ans";
+    if (view.kind === "text") ansEl.textContent = text || "（空欄のまま開示されました）";
+    else ansEl.innerHTML = '<span class="state ' + view.cls + '">' + esc(view.t) + '</span>';
+  }
+  function peerText(id){
+    if (!S.peer2 || !S.peer2.texts) return "";
+    return S.peer2.texts[id] || "";
+  }
+
+  /* ---------- render ---------- */
+  function renderRow(id){
+    var q = QMAP[id], me = item(id);
+    var lock = lockState(q), isMutual = mutual(q);
+    var hasPeer2 = !!(S.peer2 && S.peer2.texts && (id in S.peer2.texts));
+    var shown = isMutual && hasPeer2;
+
+    var card = document.querySelector('.acard[data-q="' + id + '"]');
+    if (card) {
+      var ta = card.querySelector('[data-role="text"]');
+      if (document.activeElement !== ta && ta.value !== me.text) ta.value = me.text;
+      Array.prototype.forEach.call(card.querySelectorAll("[data-stance]"), function(b){
+        b.setAttribute("aria-pressed", String(b.getAttribute("data-stance") === me.stance));
+      });
+      var sn = STANCES.filter(function(s){ return s.id === me.stance; })[0];
+      card.querySelector('[data-role="stnote"]').textContent = sn ? sn.note : "";
+
+      var recv = card.querySelector('[data-role="recv"]');
+      if (recv) {
+        var show = (S.role === "child");
+        recv.classList.toggle("hidden", !show);
+        if (show) {
+          Array.prototype.forEach.call(recv.querySelectorAll("[data-recv]"), function(b){
+            b.setAttribute("aria-pressed", String((b.getAttribute("data-recv") === "off") === me.noRecv));
+          });
+          card.querySelector('[data-role="recvnote"]').textContent = me.noRecv
+            ? "相手には理由は伝わりません。「まだ組む条件がそろっていない」とだけ表示されます。"
+            : "受け取る場合も、両者が開示を選ぶまでは組み上がりません。";
+        }
+      }
+    }
+
+    var row = document.querySelector('.brow[data-q="' + id + '"]');
+    if (!row) return;
+    row.classList.toggle("joined", shown);
+
+    var bar = row.querySelector('[data-role="lockbar"]');
+    bar.classList.toggle("hidden", !lock);
+    if (lock) {
+      row.querySelector('[data-role="locktext"]').textContent = (S.role === "child")
+        ? ((lock === "held")
+            ? "あなたが「いまは受け取らない」を選んでいます。相手が開示を選んでも、この項目は組めません。"
+            : "01〜08 のうち " + GATE_MIN + " 問が両者で組み上がると、この栓が抜けます（いま " + openedBase() + " 問）。")
+        : "この項目はまだ組めません。組む条件がそろっていません。";
+    }
+
+    row.querySelector('[data-role="jstate"]').innerHTML = shown
+      ? '<b>組み上がりました。</b>二人の回答が並んでいます。'
+      : (lock ? '栓がかかっています。二つの材はまだ寄せられません。'
+             : (isMutual ? '双方が開示を選びました。相手の回答が届くと組み上がります。'
+                         : '双方が「開示する」を選ぶと、二つの材が組み合わさります。'));
+
+    var meSlot  = {label: esc(ROLE_LABEL[S.role]) + ' <em>あなた</em>', view: withLock(selfView(me, shown), lock), text: me.text};
+    var youSlot = {label: esc(ROLE_LABEL[S.role === "parent" ? "child" : "parent"]), view: withLock(peerView(id, shown), lock), text: peerText(id)};
+    var left  = (S.role === "parent") ? meSlot : youSlot;
+    var right = (S.role === "parent") ? youSlot : meSlot;
+    fillHalf(row.querySelector('[data-role="roleL"]'), row.querySelector('[data-role="ansL"]'), left.label, left.view, left.text);
+    fillHalf(row.querySelector('[data-role="roleR"]'), row.querySelector('[data-role="ansR"]'), right.label, right.view, right.text);
+
+    row.querySelector('[data-role="talkrow"]').classList.toggle("hidden", !shown);
+    row.querySelector('[data-role="talk"]').checked = me.talk;
+  }
+
+  function render(){
+    var answered = 0;
+    QUESTIONS.forEach(function(q){
+      renderRow(q.id);
+      if (item(q.id).text.trim() !== "") answered++;
+    });
+    $("barOpen").textContent = answered + " / 10";
+  }
+
+  /* ---------- wipe ---------- */
+  var wipeArmed = false, wipeTimer = null;
+  $("wipe").addEventListener("click", function(){
+    if (!wipeArmed) {
+      wipeArmed = true;
+      this.textContent = "もう一度押すとすべて消します";
+      wipeTimer = setTimeout(function(){
+        wipeArmed = false;
+        $("wipe").textContent = "この端末の回答をすべて消す";
+      }, 8000);
+      return;
+    }
+    clearTimeout(wipeTimer); wipeArmed = false;
+    try { window.localStorage.removeItem(KEY); } catch(e){}
+    window.location.reload();
+  });
+})();
+</script>
+
+
+</body></html>
